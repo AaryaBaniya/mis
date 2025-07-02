@@ -1,0 +1,386 @@
+/* ===== Body & Layout ===== */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f7f1;
+  color: #333;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+.admin-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f9f7f1;
+}
+
+/* ===== Sidebar ===== */
+.admin-sidebar {
+  width: 220px;
+  background: linear-gradient(135deg, #4b3b00 0%, #7a5e00 100%);
+  color: #fff;
+  padding: 30px 20px;
+  box-shadow: 3px 0 15px rgba(0, 0, 0, 0.15);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  font-variant: small-caps;
+  letter-spacing: 1px;
+  user-select: none;
+}
+
+.admin-sidebar h2 {
+  font-size: 22px;
+  margin-bottom: 30px;
+  font-weight: 700;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.admin-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.admin-sidebar ul li {
+  margin-bottom: 18px;
+}
+
+.admin-sidebar ul li a {
+  color: #f0e6c8;
+  text-decoration: none;
+  font-weight: 600;
+  display: block;
+  padding: 10px 14px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.admin-sidebar ul li a:hover,
+.admin-sidebar ul li a:focus {
+  background-color: #c1912c;
+  color: #2a1f00;
+  box-shadow: inset 5px 0 0 0 #704f00;
+  outline: none;
+}
+
+/* ===== Content Area ===== */
+.admin-content {
+  margin-left: 220px;
+  padding: 40px 50px;
+  flex-grow: 1;
+  border-left: 2px solid #e0d8c4;
+  background-color: #fffdfa;
+  min-height: 100vh;
+  box-sizing: border-box;
+  box-shadow: inset 0 0 40px #fff8d1;
+}
+
+/* ===== Dashboard Cards ===== */
+.admin-cards {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+  justify-content: flex-start;
+}
+
+.card {
+  background-color: #fff;
+  padding: 24px 28px;
+  border-radius: 14px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.07), 0 3px 6px rgba(0, 0, 0, 0.05);
+  flex: 0 1 280px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.15), 0 6px 15px rgba(0, 0, 0, 0.10);
+}
+
+.card h2 {
+  margin-top: 0;
+  font-size: 21px;
+  color: #5c4400;
+  letter-spacing: 0.04em;
+  margin-bottom: 14px;
+}
+
+.card a {
+  margin-top: auto;
+  color: #c1912c;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 15px;
+  transition: color 0.3s ease;
+  align-self: flex-start;
+}
+
+.card a:hover,
+.card a:focus {
+  text-decoration: underline;
+  color: #7a5e00;
+}
+
+/* ===== Buttons ===== */
+.button, button {
+  background-color: #5c4400;
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  margin-right: 8px;
+  font-size: 15px;
+  box-shadow: 0 4px 7px rgba(92, 68, 0, 0.5);
+}
+
+.button:hover, button:hover,
+.button:focus, button:focus {
+  background-color: #c1912c;
+  box-shadow: 0 6px 12px rgba(193, 145, 44, 0.7);
+  outline: none;
+}
+
+.button.danger-btn {
+  background-color: #b83227;
+  box-shadow: 0 4px 7px rgba(184, 50, 39, 0.6);
+}
+
+.button.danger-btn:hover,
+.button.danger-btn:focus {
+  background-color: #992a20;
+  box-shadow: 0 6px 12px rgba(153, 42, 32, 0.8);
+}
+
+/* ===== Add Button (Top Right) ===== */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.page-header h1 {
+  font-size: 28px;
+  font-weight: 800;
+  color: #4b3b00;
+  margin: 0;
+}
+
+.add-btn {
+  background-color: #c1912c;
+  color: #fff;
+  padding: 12px 20px;
+  font-size: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(193, 145, 44, 0.3);
+}
+
+.add-btn:hover {
+  background-color: #a3791e;
+}
+
+/* ===== Table ===== */
+.table-wrapper {
+  overflow-x: auto;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  padding: 20px;
+}
+
+.product-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  min-width: 700px;
+}
+
+.product-table thead {
+  background-color: #f4f0de;
+}
+
+.product-table th,
+.product-table td {
+  padding: 16px 18px;
+  text-align: left;
+  border-bottom: 1px solid #eee3c9;
+}
+
+.product-table th {
+  color: #5c4400;
+  font-weight: 700;
+}
+
+.product-table tbody tr:hover {
+  background-color: #fffbe6;
+}
+
+.action-header {
+  text-align: right;
+}
+
+.action-buttons {
+  text-align: right;
+}
+
+.no-data {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 30px 0;
+}
+
+/* ===== Forms (Add/Edit Product) ===== */
+form {
+  background-color: #fff;
+  padding: 35px 40px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  max-width: 620px;
+  margin: 40px auto 50px auto;
+  font-size: 16px;
+  color: #4d4d4d;
+  box-sizing: border-box;
+}
+
+form:hover,
+form:focus-within {
+  box-shadow: 0 8px 28px rgba(193, 145, 44, 0.3);
+}
+
+form label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #5c4400;
+  letter-spacing: 0.02em;
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="file"],
+form select,
+form textarea {
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 24px;
+  border: 2px solid #d2c9a6;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  resize: vertical;
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+  border-color: #c1912c;
+  box-shadow: 0 0 10px #c1912caa;
+  outline: none;
+}
+
+form textarea {
+  min-height: 140px;
+  line-height: 1.4;
+}
+
+form button {
+  background-color: #5c4400;
+  color: white;
+  font-weight: 800;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-size: 16px;
+  box-shadow: 0 5px 15px rgba(92, 68, 0, 0.5);
+}
+
+form button:hover,
+form button:focus {
+  background-color: #c1912c;
+  box-shadow: 0 7px 20px rgba(193, 145, 44, 0.7);
+  outline: none;
+}
+
+/* ===== Flash Message ===== */
+.success-message {
+  background-color: #eafbe7;
+  color: #347d39;
+  border: 1px solid #c7e3c5;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
+
+/* ===== Responsive Tweaks ===== */
+@media (max-width: 720px) {
+  .admin-cards {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .card {
+    width: 100%;
+  }
+
+  .admin-content {
+    padding: 25px 20px;
+    margin-left: 0;
+    border-left: none;
+  }
+
+  .admin-sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    box-shadow: none;
+    flex-direction: row;
+    padding: 15px 10px;
+    justify-content: space-between;
+  }
+
+  .admin-sidebar h2 {
+    margin-bottom: 0;
+    font-size: 18px;
+  }
+
+  .admin-sidebar ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .product-table {
+    min-width: 100%;
+    font-size: 14px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}

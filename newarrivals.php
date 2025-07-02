@@ -2,6 +2,19 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+include 'db.php';
+
+$category_name = 'New Arrivals'; 
+
+$sql = "SELECT p.* FROM products p
+        JOIN categories c ON p.category_id = c.id
+        WHERE c.name = ?
+        ORDER BY p.id DESC";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $category_name);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -11,6 +24,12 @@ if (session_status() === PHP_SESSION_NONE) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>New Arrivals - Brass & Copper Hub</title>
   <link rel="stylesheet" href="shop.css" />
+  <style>
+    .product-card {
+      display: inline-block;
+      vertical-align: top;
+    }
+  </style>
 </head>
 <body>
 
@@ -20,31 +39,20 @@ if (session_status() === PHP_SESSION_NONE) {
   <h1>New Arrivals</h1>
   <p>Explore our latest handcrafted pieces freshly added to the collection.</p>
 </section>
-
 <section class="product-grid">
-  <div class="product-card">
-    <img src="image/new1.jpg" alt="Copper Lamp">
-    <h3>Copper Lamp</h3>
-    <p class="price">Rs. 2,100</p>
-    <button>Add to Cart</button>
-  </div>
-  <div class="product-card">
-    <img src="image/new2.jpg" alt="Brass Mirror">
-    <h3>Brass Mirror</h3>
-    <p class="price">Rs. 1,500</p>
-    <button>Add to Cart</button>
-  </div>
+  <?php if ($result->num_rows > 0): ?>
+    <?php while ($product = $result->fetch_assoc()): ?>
+      <div class="product-card">
+        <img src="image/<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+        <h3><?php echo htmlspecialchars($product['name']); ?></h3>
+        <p class="price">Rs. <?php echo number_format($product['price']); ?></p>
+        <button>Add to Cart</button>
+      </div>
+    <?php endwhile; ?>
+  <?php else: ?>
+    <p>No new arrivals found.</p>
+  <?php endif; ?>
 </section>
-
-<footer class="footer">
-  <p>© 2025 Brass & Copper Hub | Handmade in Nepal</p>
-  <div class="footer-links">
-    <a href="#">Contact</a>
-    <a href="#">Privacy</a>
-    <a href="#">Terms</a>
-  </div>
-</footer>
-
 <script>
   const searchInput = document.querySelector('.search-bar');
   const productCards = document.querySelectorAll('.product-card');
@@ -53,7 +61,7 @@ if (session_status() === PHP_SESSION_NONE) {
     const filter = searchInput.value.toLowerCase();
     productCards.forEach(card => {
       const productName = card.querySelector('h3').textContent.toLowerCase();
-      card.style.display = productName.includes(filter) ? 'block' : 'none';
+      card.style.display = productName.includes(filter) ? 'inline-block' : 'none';
     });
   });
 </script>

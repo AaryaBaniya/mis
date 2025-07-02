@@ -2,6 +2,14 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+include 'db.php'; // DB connection
+
+// Check if user is logged in
+$isLoggedIn = isset($_SESSION['user_id']);
+
+// Fetch all products
+$sql = "SELECT * FROM products ORDER BY id DESC";
+$result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -10,7 +18,7 @@ if (session_status() === PHP_SESSION_NONE) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Brass & Copper Hub - Shop</title>
   <link rel="stylesheet" href="shop.css" />
-</head>
+  </head>
 <body>
 
 <?php include 'navbar.php'; ?>
@@ -21,38 +29,19 @@ if (session_status() === PHP_SESSION_NONE) {
   <p>Explore our full collection of premium traditional items.</p>
 </section>
 
-<!-- Product Grid -->
 <section class="product-grid">
-  <div class="product-card">
-    <img src="image/pot.webp" alt="Brass Vase">
-    <h3>Brass Vase</h3>
-    <p class="price">Rs. 1,200</p>
-    <button>Add to Cart</button>
-  </div>
-  <div class="product-card">
-    <img src="image/product2.jpg" alt="Copper Bowl">
-    <h3>Copper Bowl</h3>
-    <p class="price">Rs. 850</p>
-    <button>Add to Cart</button>
-  </div>
-  <div class="product-card">
-    <img src="image/wallart.jpg" alt="Wall Art">
-    <h3>Wall Art</h3>
-    <p class="price">Rs. 1,300</p>
-    <button>Add to Cart</button>
-  </div>
-  <div class="product-card">
-    <img src="image/metalstatue.jpg" alt="Metal Statue">
-    <h3>Metal Statue</h3>
-    <p class="price">Rs. 2,000</p>
-    <button>Add to Cart</button>
-  </div>
-  <div class="product-card">
-    <img src="image/antique1.jpg" alt="Antique Pot">
-    <h3>Antique Pot</h3>
-    <p class="price">Rs. 3,000</p>
-    <button>Add to Cart</button>
-  </div>
+  <?php if ($result->num_rows > 0): ?>
+    <?php while ($product = $result->fetch_assoc()): ?>
+      <div class="product-card">
+        <img src="image/<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+        <h3><?php echo htmlspecialchars($product['name']); ?></h3>
+        <p class="price">Rs. <?php echo number_format($product['price']); ?></p>
+        <button class="add-to-cart-btn" data-logged-in="<?php echo $isLoggedIn ? 'yes' : 'no'; ?>">Add to Cart</button>
+      </div>
+    <?php endwhile; ?>
+  <?php else: ?>
+    <p>No products available.</p>
+  <?php endif; ?>
 </section>
 
 <!-- Footer -->
@@ -70,11 +59,27 @@ if (session_status() === PHP_SESSION_NONE) {
   const searchInput = document.querySelector('.search-bar');
   const productCards = document.querySelectorAll('.product-card');
 
-  searchInput.addEventListener('input', () => {
-    const filter = searchInput.value.toLowerCase();
-    productCards.forEach(card => {
-      const productName = card.querySelector('h3').textContent.toLowerCase();
-      card.style.display = productName.includes(filter) ? 'block' : 'none';
+  if(searchInput) {
+    searchInput.addEventListener('input', () => {
+      const filter = searchInput.value.toLowerCase();
+      productCards.forEach(card => {
+        const productName = card.querySelector('h3').textContent.toLowerCase();
+        card.style.display = productName.includes(filter) ? 'inline-block' : 'none';
+      });
+    });
+  }
+
+  // Add to Cart button behavior
+  document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const loggedIn = button.getAttribute('data-logged-in');
+      if (loggedIn !== 'yes') {
+        // Redirect to signin page if not logged in
+        window.location.href = 'signin.php';
+      } else {
+        // TODO: Add your add to cart logic here
+        alert('Product added to cart!');
+      }
     });
   });
 </script>

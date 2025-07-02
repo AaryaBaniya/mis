@@ -2,6 +2,21 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+include 'db.php'; // your database connection
+
+// Fetch products in the "statue" category (assuming category_id or category field)
+$category_name = 'Statue'; // Adjust as needed
+
+// Example assuming categories table and products have category_id
+$sql = "SELECT p.* FROM products p
+        JOIN categories c ON p.category_id = c.id
+        WHERE c.name = ?
+        ORDER BY p.id DESC";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $category_name);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -20,20 +35,19 @@ if (session_status() === PHP_SESSION_NONE) {
   <h1>Statue Collection</h1>
   <p>Timeless handcrafted statues for your home or temple.</p>
 </section>
-
 <section class="product-grid">
-  <div class="product-card">
-    <img src="image/statue1.jpg" alt="Buddha Statue">
-    <h3>Buddha Statue</h3>
-    <p class="price">Rs. 3,000</p>
-    <button>Add to Cart</button>
-  </div>
-  <div class="product-card">
-    <img src="image/statue2.jpg" alt="Ganesh Idol">
-    <h3>Ganesh Idol</h3>
-    <p class="price">Rs. 2,500</p>
-    <button>Add to Cart</button>
-  </div>
+  <?php if ($result->num_rows > 0): ?>
+    <?php while ($product = $result->fetch_assoc()): ?>
+      <div class="product-card">
+        <img src="image/<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+        <h3><?php echo htmlspecialchars($product['name']); ?></h3>
+        <p class="price">Rs. <?php echo number_format($product['price']); ?></p>
+        <button>Add to Cart</button>
+      </div>
+    <?php endwhile; ?>
+  <?php else: ?>
+    <p>No statues found in this category.</p>
+  <?php endif; ?>
 </section>
 
 <footer class="footer">
@@ -53,7 +67,7 @@ if (session_status() === PHP_SESSION_NONE) {
     const filter = searchInput.value.toLowerCase();
     productCards.forEach(card => {
       const productName = card.querySelector('h3').textContent.toLowerCase();
-      card.style.display = productName.includes(filter) ? 'block' : 'none';
+      card.style.display = productName.includes(filter) ? 'inline-block' : 'none';
     });
   });
 </script>

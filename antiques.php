@@ -2,6 +2,19 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+include 'db.php'; // your database connection
+
+$category_name = 'Antiques'; // adjust if category name is different
+
+$sql = "SELECT p.* FROM products p
+        JOIN categories c ON p.category_id = c.id
+        WHERE c.name = ?
+        ORDER BY p.id DESC";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $category_name);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -11,6 +24,13 @@ if (session_status() === PHP_SESSION_NONE) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Antiques - Brass & Copper Hub</title>
   <link rel="stylesheet" href="shop.css" />
+  <style>
+    /* Make product cards inline-block for better search filtering */
+    .product-card {
+      display: inline-block;
+      vertical-align: top;
+    }
+  </style>
 </head>
 <body>
 
@@ -21,27 +41,20 @@ if (session_status() === PHP_SESSION_NONE) {
   <h1>Antique Collection</h1>
   <p>Add elegance to your space with handcrafted decor items.</p>
 </section>
-
 <!-- Product Grid -->
 <section class="product-grid">
-  <div class="product-card">
-    <img src="image/wallart.jpg" alt="Wall Art">
-    <h3>Wall Art</h3>
-    <p class="price">Rs. 1,300</p>
-    <button>Add to Cart</button>
-  </div>
-  <div class="product-card">
-    <img src="image/vase.jpg" alt="Brass Vase">
-    <h3>Brass Vase</h3>
-    <p class="price">Rs. 1,200</p>
-    <button>Add to Cart</button>
-  </div>
-  <div class="product-card">
-    <img src="image/candleset.jpg" alt="Decorative Candle">
-    <h3>Decorative Candle</h3>
-    <p class="price">Rs. 800</p>
-    <button>Add to Cart</button>
-  </div>
+  <?php if ($result->num_rows > 0): ?>
+    <?php while ($product = $result->fetch_assoc()): ?>
+      <div class="product-card">
+        <img src="image/<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+        <h3><?php echo htmlspecialchars($product['name']); ?></h3>
+        <p class="price">Rs. <?php echo number_format($product['price']); ?></p>
+        <button>Add to Cart</button>
+      </div>
+    <?php endwhile; ?>
+  <?php else: ?>
+    <p>No antiques found in this category.</p>
+  <?php endif; ?>
 </section>
 
 <!-- Footer -->
@@ -54,7 +67,6 @@ if (session_status() === PHP_SESSION_NONE) {
   </div>
 </footer>
 
-<!-- Search Filter -->
 <script>
   const searchInput = document.querySelector('.search-bar');
   const productCards = document.querySelectorAll('.product-card');
@@ -63,7 +75,7 @@ if (session_status() === PHP_SESSION_NONE) {
     const filter = searchInput.value.toLowerCase();
     productCards.forEach(card => {
       const productName = card.querySelector('h3').textContent.toLowerCase();
-      card.style.display = productName.includes(filter) ? 'block' : 'none';
+      card.style.display = productName.includes(filter) ? 'inline-block' : 'none';
     });
   });
 </script>

@@ -22,10 +22,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         
             if ($user['role'] === 'admin') {
-                header("Location: admin.php");
-            } else {
-                header("Location: dashboard.php");
-            }
+    $_SESSION['is_admin'] = true;
+    header("Location: admin.php");
+} else {
+    $_SESSION['is_admin'] = false;
+    header("Location: dashboard.php");
+}
+
             exit();
         } else {
             $error = "Invalid password."; 
