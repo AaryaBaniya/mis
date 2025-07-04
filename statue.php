@@ -35,6 +35,7 @@ $result = $stmt->get_result();
   <h1>Statue Collection</h1>
   <p>Timeless handcrafted statues for your home or temple.</p>
 </section>
+<div class= "container">
 <section class="product-grid">
   <?php if ($result->num_rows > 0): ?>
     <?php while ($product = $result->fetch_assoc()): ?>

@@ -1,38 +1,36 @@
 <?php
 session_start();
+include 'db.php';
+
 if (!isset($_SESSION['user_id'])) {
   header("Location: signin.php");
   exit();
 }
 
-include 'db.php';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $user_id = $_SESSION['user_id'];
+  $product_id = $_POST['product_id'];
 
-$user_id = $_SESSION['user_id'];
-$product_id = $_POST['product_id'];
-$quantity = $_POST['quantity'];
+  // Check if item already exists in cart
+  $check = $conn->prepare("SELECT * FROM cart WHERE user_id = ? AND product_id = ?");
+  $check->bind_param("ii", $user_id, $product_id);
+  $check->execute();
+  $result = $check->get_result();
 
-// Check if item is already in cart
-$checkSql = "SELECT id, quantity FROM cart WHERE user_id = ? AND product_id = ?";
-$stmt = $conn->prepare($checkSql);
-$stmt->bind_param("ii", $user_id, $product_id);
-$stmt->execute();
-$result = $stmt->get_result();
+  if ($result->num_rows > 0) {
+    // Update quantity
+    $update = $conn->prepare("UPDATE cart SET quantity = quantity + 1 WHERE user_id = ? AND product_id = ?");
+    $update->bind_param("ii", $user_id, $product_id);
+    $update->execute();
+  } else {
+    // Insert new
+    $insert = $conn->prepare("INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, 1)");
+    $insert->bind_param("ii", $user_id, $product_id);
+    $insert->execute();
+  }
 
-if ($result->num_rows > 0) {
-  // Update quantity
-  $row = $result->fetch_assoc();
-  $newQty = $row['quantity'] + $quantity;
-  $updateSql = "UPDATE cart SET quantity = ? WHERE id = ?";
-  $updateStmt = $conn->prepare($updateSql);
-  $updateStmt->bind_param("ii", $newQty, $row['id']);
-  $updateStmt->execute();
-} else {
-  // Insert new item
-  $insertSql = "INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)";
-  $insertStmt = $conn->prepare($insertSql);
-  $insertStmt->bind_param("iii", $user_id, $product_id, $quantity);
-  $insertStmt->execute();
+  // Redirect back to shop
+  header("Location: shop.php?added=1");
+  exit();
 }
-
-header("Location: cart.php");
-exit();
+?>

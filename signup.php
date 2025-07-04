@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Email already registered."; // Error message for existing email
     } else {
         // Insert new user into the database
-        $stmt = $conn->prepare("INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
         $stmt->bind_param("sss", $username, $email, $password_hash);
 
         if ($stmt->execute()) {
@@ -72,4 +72,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
   </div>
 </body>
-</html>
+</html

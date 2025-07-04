@@ -41,6 +41,7 @@ $result = $stmt->get_result();
   <p>Add elegance to your space with handcrafted decor items.</p>
 </section>
 <!-- Product Grid -->
+ <div class="container">
 <section class="product-grid">
   <?php if ($result->num_rows > 0): ?>
     <?php while ($product = $result->fetch_assoc()): ?>
@@ -55,6 +56,7 @@ $result = $stmt->get_result();
     <p>No decor items found in this category.</p>
   <?php endif; ?>
 </section>
+  </div>
 
 <!-- Footer -->
 <footer class="footer">

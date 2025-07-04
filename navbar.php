@@ -19,8 +19,6 @@ if (session_status() === PHP_SESSION_NONE) {
     <a href="statue.php" class="nav-link">Statue</a>
     <a href="antiques.php" class="nav-link">Antiques</a>
   </nav>
-
-  <!-- Search, Cart, Profile -->
   <div class="search-cart-profile">
     <input type="text" placeholder="Search products..." class="search-bar" />
     <div class="dropdown profile-dropdown">

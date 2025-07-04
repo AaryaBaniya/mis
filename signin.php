@@ -48,6 +48,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <link rel="stylesheet" href="auth.css" />
 </head>
 <body>
+   <section id="header">
+    <img src="image/itis.jpg" alt="logo" class ="logo">
+        <div>
+            <ul id="navbar">
+                <li><a class="active" href="index.php">Home</a></li>
+                <li><a href="shop.php">Shop</a></li>
+                <li><a href="blog.php">Blog</a></li>
+                <li><a href="about.php">About</a></li>
+                <li><a href="contact.php">Contact</a></li>
+            </ul>
+        </div>
+    </section>
   <div class="login-box">
     <h2>Welcome Back!</h2>
     <?php if (!empty($error)): ?>
