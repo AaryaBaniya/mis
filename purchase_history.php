@@ -51,10 +51,11 @@ $result = $stmt->get_result();
 
           if ($order['status'] === 'Pending' && $hours_since <= 4) {
         ?>
-          <form method="POST" action="cancel_order.php">
-            <input type="hidden" name="purchase_id" value="<?php echo $order['id']; ?>">
-            <button type="submit" class="remove-btn">❌ Cancel Order</button>
-          </form>
+          <form method="POST" action="cancel_order.php" onsubmit="return confirmCancel();">
+  <input type="hidden" name="purchase_id" value="<?php echo $order['id']; ?>">
+  <button type="submit" class="remove-btn">❌ Cancel Order</button>
+</form>
+
           <p class="info-note">You can cancel this order within 4 hours.</p>
         <?php } elseif ($order['status'] === 'Pending') { ?>
           <p class="info-note">Cancellation window expired.</p>
@@ -69,5 +70,11 @@ $result = $stmt->get_result();
 <footer class="footer">
   <p>© 2025 Brass & Copper Hub</p>
 </footer>
+<script>
+  function confirmCancel() {
+    return confirm("⚠️ Are you sure you want to cancel this order? This action cannot be undone.");
+  }
+</script>
+
 </body>
 </html>

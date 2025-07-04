@@ -35,5 +35,5 @@ $delete->bind_param("i", $user_id);
 $delete->execute();
 
 $_SESSION['flash_message'] = "🎉 Order placed successfully!";
-header("Location: dashboard.php");
+header("Location: purchase_history.php");
 exit();

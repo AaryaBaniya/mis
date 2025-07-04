@@ -4,7 +4,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 include 'db.php';
 
-$category_name = 'New Arrivals'; 
+$isLoggedIn = isset($_SESSION['user_id']);
+$category_name = 'New Arrivals';
 
 $sql = "SELECT p.* FROM products p
         JOIN categories c ON p.category_id = c.id
@@ -29,9 +30,26 @@ $result = $stmt->get_result();
       display: inline-block;
       vertical-align: top;
     }
+    .flash-message {
+      background-color: #4BB543;
+      color: white;
+      padding: 10px 20px;
+      margin: 15px auto;
+      text-align: center;
+      border-radius: 5px;
+      max-width: 400px;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
   </style>
 </head>
 <body>
+
+<?php
+if (isset($_GET['added']) && $_GET['added'] == 1) {
+    echo '<div class="flash-message">Product added to cart successfully!</div>';
+}
+?>
 
 <?php include 'navbar.php'; ?>
 
@@ -39,6 +57,8 @@ $result = $stmt->get_result();
   <h1>New Arrivals</h1>
   <p>Explore our latest handcrafted pieces freshly added to the collection.</p>
 </section>
+
+<div class="container">
 <section class="product-grid">
   <?php if ($result->num_rows > 0): ?>
     <?php while ($product = $result->fetch_assoc()): ?>
@@ -46,25 +66,47 @@ $result = $stmt->get_result();
         <img src="image/<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
         <h3><?php echo htmlspecialchars($product['name']); ?></h3>
         <p class="price">Rs. <?php echo number_format($product['price']); ?></p>
-        <button>Add to Cart</button>
+
+        <?php if ($isLoggedIn): ?>
+          <form action="add_to_cart.php" method="POST">
+            <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+            <input type="hidden" name="redirect_page" value="<?php echo basename($_SERVER['PHP_SELF']); ?>">
+            <input type="hidden" name="redirect_category" value="<?php echo htmlspecialchars($category_name); ?>">
+            <button type="submit">Add to Cart</button>
+          </form>
+        <?php else: ?>
+          <a href="signin.php">
+            <button>Login to Buy</button>
+          </a>
+        <?php endif; ?>
       </div>
     <?php endwhile; ?>
   <?php else: ?>
     <p>No new arrivals found.</p>
   <?php endif; ?>
 </section>
+</div>
+<?php include 'footer.php'; ?>
 <script>
   const searchInput = document.querySelector('.search-bar');
   const productCards = document.querySelectorAll('.product-card');
 
-  searchInput.addEventListener('input', () => {
-    const filter = searchInput.value.toLowerCase();
-    productCards.forEach(card => {
-      const productName = card.querySelector('h3').textContent.toLowerCase();
-      card.style.display = productName.includes(filter) ? 'inline-block' : 'none';
+  if (searchInput) {
+    searchInput.addEventListener('input', () => {
+      const filter = searchInput.value.toLowerCase();
+      productCards.forEach(card => {
+        const productName = card.querySelector('h3').textContent.toLowerCase();
+        card.style.display = productName.includes(filter) ? 'inline-block' : 'none';
+      });
     });
-  });
-</script>
+  }  
+  setTimeout(() => {
+    const flash = document.querySelector('.flash-message');
+    if (flash) {
+      flash.style.display = 'none';
+    }
+  }, 4000);
+  </script>
 
 </body>
 </html>

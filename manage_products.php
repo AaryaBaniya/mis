@@ -31,7 +31,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
         <table class="product-table">
           <thead>
             <tr>
-              <th>#</th>
+              <th>SN</th>
               <th>Product</th>
               <th>Price</th>
               <th>Category</th>

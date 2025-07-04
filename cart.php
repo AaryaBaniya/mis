@@ -53,7 +53,7 @@ $result = $stmt->get_result();
 
   <!-- Checkout button outside loop -->
   <form action="checkout.php" method="POST" style="text-align: center; margin-top: 30px;">
-    <button type="submit" class="checkout-btn">🛒 Proceed to Checkout</button>
+    <button type="submit" class="checkout-btn">Checkout</button>
   </form>
 
   <?php else: ?>

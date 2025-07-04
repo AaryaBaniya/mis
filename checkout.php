@@ -40,9 +40,8 @@ while ($row = $result->fetch_assoc()) {
 <section class="shop-hero">
   <h1>🧾 Checkout</h1>
 </section>
-
 <section class="checkout-section">
-  <form action="place_order.php" method="POST" class="checkout-form">
+  <form class="checkout-form" action="place_order.php" method="POST" onsubmit="return confirmPlaceOrder();">
     <h3>Shipping Information</h3>
     <input type="text" name="name" placeholder="Full Name" required />
     <input type="text" name="address" placeholder="Full Address" required />
@@ -59,13 +58,6 @@ while ($row = $result->fetch_assoc()) {
       <?php endforeach; ?>
     </ul>
     <p><strong>Total: Rs. <?php echo $total; ?></strong></p>
-
-    <button type="submit" class="checkout-btn">Place Order</button>
+    <button type="submit" class="checkout-btn">Place Order ✅</button>
   </form>
 </section>
-
-<footer class="footer">
-  <p>© 2025 Brass & Copper Hub</p>
-</footer>
-</body>
-</html>
