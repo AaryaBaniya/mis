@@ -455,3 +455,58 @@ body {
   font-weight: bold;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  width: 80%;
+  max-width: 800px;
+  position: relative;
+}
+.close {
+  position: absolute;
+  top: 10px; right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+}
+.modal-body {
+  display: flex;
+  gap: 20px;
+}
+.modal-left img {
+  width: 300px;
+  border-radius: 8px;
+}
+.modal-right {
+  flex: 1;
+}
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+.quantity-selector button {
+  width: 30px;
+  height: 30px;
+}
+.quantity-selector input {
+  width: 50px;
+  text-align: center;
+}
+.warning-note {
+  color: red;
+  font-weight: bold;
+  margin-top: 8px;
+}

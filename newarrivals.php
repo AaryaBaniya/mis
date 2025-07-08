@@ -25,23 +25,6 @@ $result = $stmt->get_result();
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>New Arrivals - Brass & Copper Hub</title>
   <link rel="stylesheet" href="shop.css" />
-  <style>
-    .product-card {
-      display: inline-block;
-      vertical-align: top;
-    }
-    .flash-message {
-      background-color: #4BB543;
-      color: white;
-      padding: 10px 20px;
-      margin: 15px auto;
-      text-align: center;
-      border-radius: 5px;
-      max-width: 400px;
-      font-weight: bold;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    }
-  </style>
 </head>
 <body>
 
@@ -62,23 +45,16 @@ if (isset($_GET['added']) && $_GET['added'] == 1) {
 <section class="product-grid">
   <?php if ($result->num_rows > 0): ?>
     <?php while ($product = $result->fetch_assoc()): ?>
-      <div class="product-card">
+      <div class="product-card"
+           data-name="<?php echo htmlspecialchars($product['name']); ?>"
+           data-price="<?php echo $product['price']; ?>"
+           data-description="<?php echo htmlspecialchars($product['description']); ?>"
+           data-image="image/<?php echo htmlspecialchars($product['image']); ?>"
+           data-id="<?php echo $product['id']; ?>"
+           onclick="openModal(this)">
         <img src="image/<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
         <h3><?php echo htmlspecialchars($product['name']); ?></h3>
         <p class="price">Rs. <?php echo number_format($product['price']); ?></p>
-
-        <?php if ($isLoggedIn): ?>
-          <form action="add_to_cart.php" method="POST">
-            <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
-            <input type="hidden" name="redirect_page" value="<?php echo basename($_SERVER['PHP_SELF']); ?>">
-            <input type="hidden" name="redirect_category" value="<?php echo htmlspecialchars($category_name); ?>">
-            <button type="submit">Add to Cart</button>
-          </form>
-        <?php else: ?>
-          <a href="signin.php">
-            <button>Login to Buy</button>
-          </a>
-        <?php endif; ?>
       </div>
     <?php endwhile; ?>
   <?php else: ?>
@@ -86,7 +62,44 @@ if (isset($_GET['added']) && $_GET['added'] == 1) {
   <?php endif; ?>
 </section>
 </div>
+
+<!-- MODAL -->
+<div id="productModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <div class="modal-body">
+      <div class="modal-left">
+        <img id="modalImage" src="" alt="" />
+      </div>
+      <div class="modal-right">
+        <h2 id="modalName"></h2>
+        <p id="modalDescription"></p>
+        <p><strong>Price: Rs. <span id="modalPrice"></span></strong></p>
+
+        <div class="quantity-selector">
+          <button onclick="updateQuantity(-1)">-</button>
+          <input type="number" id="modalQuantity" value="1" min="1" readonly>
+          <button onclick="updateQuantity(1)">+</button>
+        </div>
+
+        <?php if ($isLoggedIn): ?>
+          <form id="modalForm" action="add_to_cart.php" method="POST">
+            <input type="hidden" name="product_id" id="modalProductId">
+            <input type="hidden" name="quantity" id="modalProductQty">
+            <input type="hidden" name="redirect_page" value="<?php echo basename($_SERVER['PHP_SELF']); ?>">
+            <input type="hidden" name="redirect_category" value="<?php echo htmlspecialchars($category_name); ?>">
+            <button type="submit">Add to Cart</button>
+          </form>
+        <?php else: ?>
+          <a href="signin.php"><button>Login to Buy</button></a>
+        <?php endif; ?>
+      </div>
+    </div>
+  </div>
+</div>
+
 <?php include 'footer.php'; ?>
+
 <script>
   const searchInput = document.querySelector('.search-bar');
   const productCards = document.querySelectorAll('.product-card');
@@ -99,14 +112,39 @@ if (isset($_GET['added']) && $_GET['added'] == 1) {
         card.style.display = productName.includes(filter) ? 'inline-block' : 'none';
       });
     });
-  }  
+  }
+
   setTimeout(() => {
     const flash = document.querySelector('.flash-message');
     if (flash) {
       flash.style.display = 'none';
     }
   }, 4000);
-  </script>
+
+  function openModal(card) {
+    document.getElementById('productModal').style.display = 'flex';
+    document.getElementById('modalImage').src = card.dataset.image;
+    document.getElementById('modalName').textContent = card.dataset.name;
+    document.getElementById('modalDescription').textContent = card.dataset.description;
+    document.getElementById('modalPrice').textContent = card.dataset.price;
+    document.getElementById('modalProductId').value = card.dataset.id;
+    document.getElementById('modalQuantity').value = 1;
+    document.getElementById('modalProductQty').value = 1;
+  }
+
+  function closeModal() {
+    document.getElementById('productModal').style.display = 'none';
+  }
+
+  function updateQuantity(change) {
+    let qtyInput = document.getElementById('modalQuantity');
+    let qtyHidden = document.getElementById('modalProductQty');
+    let current = parseInt(qtyInput.value);
+    let updated = Math.max(1, current + change);
+    qtyInput.value = updated;
+    qtyHidden.value = updated;
+  }
+</script>
 
 </body>
 </html>

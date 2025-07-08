@@ -1,10 +1,15 @@
 <?php
 session_start();
 include 'db.php'; 
+
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../signin.php");
     exit();
 }
+
+// Get counts
+$product_count = $conn->query("SELECT COUNT(*) as total FROM products")->fetch_assoc()['total'];
+$category_count = $conn->query("SELECT COUNT(*) as total FROM categories")->fetch_assoc()['total'];
 ?>
 
 <!DOCTYPE html>
@@ -13,15 +18,32 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
   <meta charset="UTF-8">
   <title>Manage Products</title>
   <link rel="stylesheet" href="admin.css">
+  <style>
+    .info-message {
+      background-color: #e7f3ff;
+      color: #084298;
+      padding: 10px 15px;
+      border-left: 5px solid #0d6efd;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+  </style>
 </head>
 <body>
   <div class="admin-container">
     <div class="admin-content">
+      <?php include 'header.php'; ?>
       <div class="page-header">
-        <?php include 'header.php'; ?>
         <h1>Manage Products</h1>
         <a href="add_product.php" class="button add-btn">+ Add Product</a>
       </div>
+
+      <!-- Total counts message -->
+      <p class="info-message">
+        You currently have <strong><?= $product_count ?></strong> products across 
+        <strong><?= $category_count ?></strong> categories.
+      </p>
 
       <?php if (isset($_GET['message'])): ?>
         <p class="success-message"><?= htmlspecialchars($_GET['message']) ?></p>
@@ -40,7 +62,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
           </thead>
           <tbody>
             <?php
-            $sql = "SELECT products.*, categories.name AS category FROM products LEFT JOIN categories ON products.category_id = categories.id";
+            $sql = "SELECT products.*, categories.name AS category 
+                    FROM products 
+                    LEFT JOIN categories ON products.category_id = categories.id";
             $result = $conn->query($sql);
 
             if ($result && $result->num_rows > 0):

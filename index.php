@@ -33,8 +33,6 @@
         <p>Bring culture and craftsmanship to your home.</p>
         <a href="shop.php" class="hero-btn">Shop Now</a>
     </section>
-
-    <!-- Features or Categories -->
     <section id="features" class="section-p1">
         <div class="feature-box">
             <img src="image/fa.png" alt="Fast Delivery">

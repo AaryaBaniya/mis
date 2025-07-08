@@ -13,7 +13,7 @@ if (session_status() === PHP_SESSION_NONE) {
   <?php if (isset($_SESSION['user_id'])): ?>
   <a href="dashboard.php" class="nav-link">Dashboard</a>
 <?php endif; ?>
-    <a href="Shop.php" class="nav-link">Shop</a>
+    <a href="shop.php" class="nav-link">Shop</a>
     <a href="newarrivals.php" class="nav-link">New Arrivals</a>
     <a href="decor.php" class="nav-link">Decor</a>
     <a href="statue.php" class="nav-link">Statue</a>
