@@ -1,7 +1,13 @@
 <?php
+// Start session for users only if needed (guests allowed too)
+session_name("user_session");
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+// Check if user is logged in and is a customer
+$isLoggedIn = isset($_SESSION['user_id']) && $_SESSION['role'] === 'user';
+
 include 'db.php';
 
 $isLoggedIn = isset($_SESSION['user_id']);

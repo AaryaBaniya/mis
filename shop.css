@@ -186,7 +186,7 @@ body {
 }
 .product-card {
   border: 1px solid #ddd;
-  padding: 15px;
+  padding: 30px;
   border-radius: 8px;
   background-color: #fff;
   transition: transform 0.2s;

@@ -1,10 +1,10 @@
 <?php
+session_name("admin_session");
 session_start();
 include 'db.php';
 
-// Ensure admin is logged in
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-    header("Location: ../signin.php");
+if (!isset($_SESSION['admin_id']) || $_SESSION['role'] !== 'admin') {
+    header("Location: signin.php");
     exit();
 }
 
@@ -12,23 +12,32 @@ if (isset($_GET['id'], $_GET['status'])) {
     $id = intval($_GET['id']);
     $status = $_GET['status'];
 
-    if ($status === 'Cancelled') {
-        // Admin is cancelling
-        $cancelledBy = 'admin';
-        $stmt = $conn->prepare("UPDATE purchases SET status = ?, cancelled_by = ? WHERE id = ?");
-        $stmt->bind_param("ssi", $status, $cancelledBy, $id);
-    } elseif ($status === 'Dispatched') {
-        // Dispatching — no cancelled_by
-        $stmt = $conn->prepare("UPDATE purchases SET status = ?, cancelled_by = NULL WHERE id = ?");
-        $stmt->bind_param("si", $status, $id);
-    } else {
-        // Optional: handle unknown status values (security)
-        header("Location: orders.php?error=invalid_status");
-        exit();
+    // Use a switch statement for clarity
+    switch ($status) {
+        case 'Dispatched':
+            // Only update the status. Do not touch the cancelled_by column.
+            $stmt = $conn->prepare("UPDATE purchases SET status = ? WHERE id = ?");
+            $stmt->bind_param("si", $status, $id);
+            break;
+
+        case 'Cancelled':
+            // Update status AND record that the admin did it.
+            $stmt = $conn->prepare("UPDATE purchases SET status = ?, cancelled_by = 'admin' WHERE id = ?");
+            $stmt->bind_param("si", $status, $id);
+            break;
+        
+        default:
+            // If status is something unexpected, do nothing and exit.
+            header("Location: orders.php?error=invalid_status");
+            exit();
     }
 
-    $stmt->execute();
+    if ($stmt) {
+        $stmt->execute();
+        $stmt->close();
+    }
 }
 
 header("Location: orders.php");
 exit();
+?>

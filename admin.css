@@ -307,6 +307,34 @@ form button:focus {
   box-shadow: 0 7px 20px rgba(193, 145, 44, 0.7);
   outline: none;
 }
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+form label {
+  font-weight: 600;
+  color: #4b3b00;
+  margin-bottom: 5px;
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="file"],
+form select,
+form textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc7aa;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+form img {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
 
 /* ===== Order Stats ===== */
 .order-stats {

@@ -1,5 +1,7 @@
 <?php
+session_name("user_session");
 session_start();
+
 include 'db.php';
 
 if (!isset($_SESSION['user_id']) || $_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['purchase_id'])) {
@@ -21,11 +23,11 @@ $order = $result->fetch_assoc();
 if ($order && $order['status'] === 'Pending') {
     $placed_time = strtotime($order['purchase_date']);
     $time_diff = time() - $placed_time;
-
-    if ($time_diff <= 14400) { // 4 hours in seconds
-        $update = $conn->prepare("UPDATE purchases SET status = 'Cancelled' WHERE id = ?");
-        $update->bind_param("i", $purchase_id);
-        if ($update->execute()) {
+    // ...
+if ($time_diff <= 14400) { 
+    $update = $conn->prepare("UPDATE purchases SET status = 'Cancelled', cancelled_by = 'user' WHERE id = ?");
+    $update->bind_param("i", $purchase_id);
+    if ($update->execute()) {
             $_SESSION['flash_message'] = "✅ Order cancelled successfully.";
         } else {
             $_SESSION['flash_message'] = "❌ Failed to cancel the order. Please try again.";

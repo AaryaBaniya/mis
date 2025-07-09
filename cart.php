@@ -1,8 +1,10 @@
 <?php
+session_name("user_session");
 session_start();
-if (!isset($_SESSION['user_id'])) {
-  header("Location: signin.php");
-  exit();
+
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
+    header("Location: signin.php");
+    exit();
 }
 
 include 'db.php';

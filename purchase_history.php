@@ -1,5 +1,7 @@
 <?php
+session_name("user_session");
 session_start();
+
 if (!isset($_SESSION['user_id'])) {
   header("Location: signin.php");
   exit();
@@ -7,8 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 
 include 'db.php';
 $user_id = $_SESSION['user_id'];
-
-$sql = "SELECT p.id, pr.name, pr.price, pr.image, p.quantity, p.purchase_date, p.status 
+$sql = "SELECT p.id, pr.name, pr.price, pr.image, p.quantity, p.purchase_date, p.status, p.cancelled_by 
         FROM purchases p 
         JOIN products pr ON p.product_id = pr.id 
         WHERE p.user_id = ? ORDER BY p.purchase_date DESC";
@@ -49,7 +50,23 @@ if (isset($_SESSION['flash_message'])) {
         <h3><?php echo htmlspecialchars($order['name']); ?></h3>
         <p>Quantity: <?php echo $order['quantity']; ?></p>
         <p>Total: Rs. <?php echo $order['price'] * $order['quantity']; ?></p>
-        <p>Status: <strong><?php echo $order['status']; ?></strong></p>
+      <p>Status: 
+  <strong>
+    <?php
+      if ($order['status'] === 'Cancelled') {
+          if ($order['cancelled_by'] === 'user') {
+              echo '<span style="color: red;">You Cancelled This Order</span>';
+          } else { // Can be 'admin' or NULL (for old orders before the fix)
+              echo '<span style="color: orange;">Cancelled by Admin</span>';
+          }
+      } elseif ($order['status'] === 'Dispatched') {
+          echo '<span style="color: blue;">Dispatched for Delivery</span>';
+      } else {
+          echo htmlspecialchars($order['status']); // e.g., 'Pending'
+      }
+    ?>
+  </strong>
+</p>
         <p>Ordered at: <?php echo $order['purchase_date']; ?></p>
 
         <?php

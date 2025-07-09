@@ -1,10 +1,16 @@
 <?php
+// Start session for users only if needed (guests allowed too)
+session_name("user_session");
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+// Check if user is logged in and is a customer
+$isLoggedIn = isset($_SESSION['user_id']) && $_SESSION['role'] === 'user';
+
 include 'db.php';
 
-$isLoggedIn = isset($_SESSION['user_id']);
+// Fetch all products
 $sql = "SELECT * FROM products ORDER BY id DESC";
 $result = $conn->query($sql);
 ?>
@@ -74,12 +80,11 @@ $result = $conn->query($sql);
 
         <?php if ($isLoggedIn): ?>
           <form id="modalForm" action="add_to_cart.php" method="POST">
-  <input type="hidden" name="product_id" id="modalProductId">
-  <input type="hidden" name="quantity" id="modalProductQty">
-<input type="hidden" name="redirect_page" value="shop.php">
-<button type="submit">Add to Cart</button>
-</form>
-
+            <input type="hidden" name="product_id" id="modalProductId">
+            <input type="hidden" name="quantity" id="modalProductQty">
+            <input type="hidden" name="redirect_page" value="shop.php">
+            <button type="submit">Add to Cart</button>
+          </form>
         <?php else: ?>
           <a href="signin.php"><button>Login to Buy</button></a>
         <?php endif; ?>

@@ -1,7 +1,9 @@
 <?php
+session_name("admin_session");
 session_start();
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-    header("Location: ../signin.php");
+
+if (!isset($_SESSION['admin_id']) || $_SESSION['role'] !== 'admin') {
+    header("Location:signin.php");
     exit();
 }
 include 'db.php';

@@ -1,17 +1,18 @@
 <?php
+session_name("admin_session");
 session_start();
-include 'db.php'; 
+include 'db.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-    header("Location: ../signin.php");
+if (!isset($_SESSION['admin_id']) || $_SESSION['role'] !== 'admin') {
+    header("Location:signin.php");
     exit();
 }
+
 
 // Get counts
 $product_count = $conn->query("SELECT COUNT(*) as total FROM products")->fetch_assoc()['total'];
 $category_count = $conn->query("SELECT COUNT(*) as total FROM categories")->fetch_assoc()['total'];
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
