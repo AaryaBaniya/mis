@@ -14,8 +14,10 @@ $pending_orders = $conn->query("SELECT COUNT(*) as total FROM purchases WHERE st
 $dispatched_orders = $conn->query("SELECT COUNT(*) as total FROM purchases WHERE status = 'Dispatched'")->fetch_assoc()['total'];
 $cancelled_orders = $conn->query("SELECT COUNT(*) as total FROM purchases WHERE status = 'Cancelled'")->fetch_assoc()['total'];
 
-// Fetch all orders
-$sql = "SELECT p.*, p.cancelled_by, pr.name AS product_name, u.username AS user_name, u.email AS user_email 
+// --- MODIFIED SQL QUERY ---
+// Added the new shipping columns to the SELECT statement
+$sql = "SELECT p.*, pr.name AS product_name, u.username AS user_name, u.email AS user_email,
+        p.shipping_name, p.shipping_address, p.phone
         FROM purchases p 
         JOIN products pr ON p.product_id = pr.id 
         JOIN users u ON p.user_id = u.id 
@@ -47,13 +49,12 @@ $result = $conn->query($sql);
         <thead>
           <tr>
             <th>Order ID</th>
-            <th>User</th>
-            <th>Email</th>
+            <th>Customer Info</th>
+            <th>Shipping Details</th>
             <th>Product</th>
-            <th>Quantity</th>
+            <th>Qty</th>
             <th>Payment</th>
             <th>Status</th>
-            <th>Ordered On</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -61,24 +62,31 @@ $result = $conn->query($sql);
           <?php if ($result && $result->num_rows > 0): ?>
             <?php while ($row = $result->fetch_assoc()): ?>
               <tr>
-                <td><?= $row['id'] ?></td>
-                <td><?= htmlspecialchars($row['user_name']) ?></td>
-                <td><?= htmlspecialchars($row['user_email']) ?></td>
+                <td><?= $row['id'] ?><br><small><?= date("M j, Y", strtotime($row['purchase_date'])) ?></small></td>
+                <td>
+                  <strong><?= htmlspecialchars($row['user_name']) ?></strong><br>
+                  <small><?= htmlspecialchars($row['user_email']) ?></small>
+                </td>
+                <td>
+                  <strong><?= htmlspecialchars($row['shipping_name']) ?></strong><br>
+                  <small>Location: <?= htmlspecialchars($row['shipping_address']) ?></small><br>
+                  <small>Tel: <?= htmlspecialchars($row['phone']) ?></small>
+                </td>
+                
                 <td><?= htmlspecialchars($row['product_name']) ?></td>
                 <td><?= (int)$row['quantity'] ?></td>
                 <td><?= htmlspecialchars($row['payment_method']) ?></td>
                 <td>
-                  <?php 
-                    if ($row['status'] === 'Cancelled') {
-                      echo ($row['cancelled_by'] === 'user') ? 'Cancelled by User' : 'Cancelled by Admin';
-                    } elseif ($row['status'] === 'Dispatched') {
-                      echo 'Dispatched for Delivery';
-                    } else {
-                      echo htmlspecialchars($row['status']);
-                    }
-                  ?>
+                  <span class="status-badge status-<?= strtolower(htmlspecialchars($row['status'])) ?>">
+                    <?php 
+                      if ($row['status'] === 'Cancelled') {
+                        echo 'Cancelled by ' . htmlspecialchars($row['cancelled_by']);
+                      } else {
+                        echo htmlspecialchars($row['status']);
+                      }
+                    ?>
+                  </span>
                 </td>
-                <td><?= htmlspecialchars($row['purchase_date']) ?></td>
                 <td class="action-buttons">
                   <?php if ($row['status'] === 'Pending'): ?>
                     <div class="button-group">
@@ -92,7 +100,7 @@ $result = $conn->query($sql);
               </tr>
             <?php endwhile; ?>
           <?php else: ?>
-            <tr><td colspan="9" class="no-data">No orders found.</td></tr>
+            <tr><td colspan="8" class="no-data">No orders found.</td></tr>
           <?php endif; ?>
         </tbody>
       </table>

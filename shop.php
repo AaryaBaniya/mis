@@ -21,6 +21,7 @@ $result = $conn->query($sql);
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Brass & Copper Hub - Shop</title>
   <link rel="stylesheet" href="shop.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
@@ -46,7 +47,9 @@ $result = $conn->query($sql);
           data-image="image/<?php echo htmlspecialchars($product['image']); ?>"
           data-id="<?php echo $product['id']; ?>"
           onclick="openModal(this)">
+          <div class="product-image-wrapper">
           <img src="image/<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+      </div>
           <h3><?php echo htmlspecialchars($product['name']); ?></h3>
           <p class="price">Rs. <?php echo number_format($product['price']); ?></p>
         </div>
@@ -73,7 +76,7 @@ $result = $conn->query($sql);
         <p><strong>Price: Rs. <span id="modalPrice"></span></strong></p>
 
         <div class="quantity-selector">
-          <button onclick="updateQuantity(-1)">-</button>
+          <button onclick="updateQuantity(-1)" >-</button>
           <input type="number" id="modalQuantity" value="1" min="1" readonly>
           <button onclick="updateQuantity(1)">+</button>
         </div>

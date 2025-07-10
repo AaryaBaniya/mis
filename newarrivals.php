@@ -31,6 +31,7 @@ $result = $stmt->get_result();
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>New Arrivals - Brass & Copper Hub</title>
   <link rel="stylesheet" href="shop.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
@@ -58,7 +59,9 @@ if (isset($_GET['added']) && $_GET['added'] == 1) {
            data-image="image/<?php echo htmlspecialchars($product['image']); ?>"
            data-id="<?php echo $product['id']; ?>"
            onclick="openModal(this)">
+            <div class="product-image-wrapper">
         <img src="image/<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+    </div>
         <h3><?php echo htmlspecialchars($product['name']); ?></h3>
         <p class="price">Rs. <?php echo number_format($product['price']); ?></p>
       </div>

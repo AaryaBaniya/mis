@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"/>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+    <!-- Example of Font Awesome CDN Link -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 </head>
 <body>
@@ -18,9 +20,7 @@
             <ul id="navbar">
                 <li><a class="active" href="index.php">Home</a></li>
                 <li><a href="shop.php">Shop</a></li>
-                <li><a href="blog.php">Blog</a></li>
-                <li><a href="about.php">About</a></li>
-                <li><a href="contact.php">Contact</a></li>
+                <li><a href="#footer">Contact</a></li>
             </ul>
         </div>
     </section>
@@ -47,11 +47,7 @@
             <h6>24/7 Support</h6>
         </div>
     </section>
-
-    <!-- Footer -->
-    <footer class="section-m1">
-        <p>&copy; 2025 Brass and Copper Hub | Designed by Aarya</p>
-    </footer>
+<?php include 'footer.php'; ?>
 
 </body>
 </html>

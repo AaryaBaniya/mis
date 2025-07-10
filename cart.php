@@ -40,7 +40,9 @@ $result = $stmt->get_result();
   <?php if ($result->num_rows > 0): ?>
     <?php while ($item = $result->fetch_assoc()): ?>
       <div class="product-card">
+         <div class="product-image-wrapper">
         <img src="image/<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>">
+    </div>
         <h3><?php echo htmlspecialchars($item['name']); ?></h3>
         <p class="price">Rs. <?php echo number_format($item['price']); ?></p>
         <p>Quantity: <?php echo $item['quantity']; ?></p>

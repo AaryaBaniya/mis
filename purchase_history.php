@@ -44,9 +44,9 @@ if (isset($_SESSION['flash_message'])) {
   <?php if ($result->num_rows > 0): ?>
     <?php while ($order = $result->fetch_assoc()): ?>
       <div class="product-card">
-        <!-- Optional: Show product image -->
+         <div class="product-image-wrapper">
         <img src="image/<?php echo htmlspecialchars($order['image']); ?>" alt="<?php echo htmlspecialchars($order['name']); ?>">
-
+    </div>
         <h3><?php echo htmlspecialchars($order['name']); ?></h3>
         <p>Quantity: <?php echo $order['quantity']; ?></p>
         <p>Total: Rs. <?php echo $order['price'] * $order['quantity']; ?></p>
@@ -60,9 +60,9 @@ if (isset($_SESSION['flash_message'])) {
               echo '<span style="color: orange;">Cancelled by Admin</span>';
           }
       } elseif ($order['status'] === 'Dispatched') {
-          echo '<span style="color: blue;">Dispatched for Delivery</span>';
+          echo '<span style="color: green;">Dispatched for Delivery</span>';
       } else {
-          echo htmlspecialchars($order['status']); // e.g., 'Pending'
+          echo htmlspecialchars($order['status']);
       }
     ?>
   </strong>

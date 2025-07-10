@@ -40,26 +40,13 @@ $historyResult = $stmt->get_result();
   <div class="dashboard-cards">
     <a href="purchase_history.php" class="dashboard-card">
       <h3>🛒 My Purchases</h3>
-      <p>See all your successful orders</p>
+      <p>See all your orders and track their progress.</p>
     </a>
     <a href="cart.php" class="dashboard-card">
       <h3>🛍️ My Cart</h3>
       <p>View and update items in your cart</p>
     </a>
-    <a href="cancelled_orders.php" class="dashboard-card">
-      <h3>❌ Cancelled Orders</h3>
-      <p>Track your cancelled items</p>
-    </a>
   </div>
 </section>
-
-<footer class="footer">
-  <p>© 2025 Brass & Copper Hub | Handmade in Nepal</p>
-  <div class="footer-links">
-    <a href="#">Contact</a>
-    <a href="#">Privacy</a>
-    <a href="#">Terms</a>
-  </div>
-</footer>
 </body>
 </html>

@@ -174,11 +174,107 @@ p{
     font-size: 16px;
    
 }
+/* --- General Footer Styles --- */
+.page-footer {
+    background-color:blanchedalmond;
+    color:#5c4400;           
+    padding: 20px 20px 5px;  
+    font-size: 15px;
+    line-height: 1.6;
+}
 
-/* Footer */
-footer {
-    text-align: center;
-    background-color: #f1f1f1;
-    color: #555;
-    padding: 20px;
+.page-footer .wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- Footer Content (Columns) --- */
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap:30px;
+    padding-bottom: 20px;
+}
+
+.footer-col {
+   
+    flex: 1 1 220px;
+}
+
+.footer-col h3 {
+    font-size: 18px;
+    color:#5c4400; 
+    margin-bottom: 10px;
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Adds a decorative underline to headings */
+.footer-col h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    background-color:#5c4400;
+    width: 50px;
+}
+
+.footer-col.about p {
+    margin-top: 0;
+}
+
+
+/* --- Footer Lists & Links --- */
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-col ul li {
+    margin-bottom: 8px;
+}
+
+.footer-col ul li a {
+    color: #5c4400; 
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-flex; 
+    align-items: center;
+}
+
+.footer-col ul li a:hover {
+    color: #c1912c;
+    transform: translateX(5px); 
+}
+
+
+/* --- Icons Styling --- */
+.footer-col i {
+    margin-right: 12px;
+    font-size: 16px;
+    width: 20px; 
+   color:#5c4400;
+}
+
+.footer-col.social ul li a:hover i {
+    color: inherit;
+}
+
+
+/* --- Responsive Design for Mobile --- */
+@media (max-width: 768px) {
+    .footer-content {
+        justify-content: flex-start; 
+    }
+    .footer-col {
+      
+        flex: 1 1 100%; 
+        margin-bottom: 20px; 
+    }
+    .footer-col h3::after {
+        width: 40px;
+    }
 }
