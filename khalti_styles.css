@@ -1,0 +1,209 @@
+/* khalti_styles.css */
+
+/* General improvements for checkout section */
+.checkout-section {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.checkout-form h3 {
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 1.5em;
+}
+
+.checkout-form input[type="text"] {
+    width: calc(100% - 20px);
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box; /* Include padding in width */
+}
+
+.checkout-form label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    color: #555;
+    cursor: pointer;
+}
+
+.checkout-form input[type="radio"] {
+    margin-right: 10px;
+    transform: scale(1.2); /* Slightly larger radio buttons */
+}
+
+.checkout-form ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    border-top: 1px dashed #ddd;
+    border-bottom: 1px dashed #ddd;
+    padding: 15px 0;
+}
+
+.checkout-form ul li {
+    padding: 8px 0;
+    font-size: 1.05em;
+    color: #666;
+    display: flex;
+    justify-content: space-between;
+}
+
+.checkout-form p strong {
+    font-size: 1.3em;
+    color: #222;
+    display: block;
+    margin-top: 20px;
+    text-align: right;
+}
+
+.checkout-btn {
+    display: block;
+    width: 100%;
+    padding: 15px 20px;
+    background-color: #4CAF50; /* Green for success/action */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 30px;
+}
+
+.checkout-btn:hover {
+    background-color: #45a049;
+}
+
+/* Thank You Page Specific Styles */
+.thank-you-section {
+    text-align: center;
+    padding: 80px 20px;
+    background-color: #e8f5e9; /* Light green background */
+    min-height: calc(100vh - 120px); /* Adjust based on navbar/footer height */
+}
+
+.thank-you-section h1 {
+    color: #2e7d32; /* Darker green */
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+.thank-you-section p {
+    font-size: 1.2em;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.order-summary-box {
+    background-color: #ffffff;
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+    padding: 30px;
+    margin: 40px auto;
+    max-width: 600px;
+    text-align: left;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.order-summary-box h2 {
+    color: #333;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.order-summary-box p {
+    margin-bottom: 10px;
+    color: #444;
+    font-size: 1.05em;
+}
+
+.order-summary-box ul {
+    list-style: disc;
+    padding-left: 20px;
+    margin-top: 15px;
+}
+
+.order-summary-box ul li {
+    padding: 5px 0;
+    color: #555;
+}
+
+.status-pending { color: orange; font-weight: bold; }
+.status-paid { color: green; font-weight: bold; }
+.status-failed { color: red; font-weight: bold; }
+.status-processing { color: #1976d2; font-weight: bold; } /* Blue */
+.status-shipped { color: #8bc34a; font-weight: bold; } /* Light green */
+.status-delivered { color: #4CAF50; font-weight: bold; } /* Dark green */
+.status-cancelled { color: #e53935; font-weight: bold; } /* Red */
+
+
+.btn {
+    display: inline-block;
+    padding: 12px 25px;
+    margin: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.primary-btn {
+    background-color: #007bff; /* Blue */
+    color: white;
+}
+
+.primary-btn:hover {
+    background-color: #0056b3;
+}
+
+.secondary-btn {
+    background-color: #6c757d; /* Gray */
+    color: white;
+}
+
+.secondary-btn:hover {
+    background-color: #545b62;
+}
+
+
+/* --- NEW: Flash Messages Styles --- */
+.flash-message {
+    padding: 15px;
+    margin: 20px auto; /* Center the message */
+    border-radius: 5px;
+    font-size: 1.1em;
+    text-align: center;
+    max-width: 700px; /* Adjust width as needed, consistent with checkout form */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.flash-success {
+    background-color: #d4edda; /* Light green background */
+    color: #155724; /* Dark green text */
+    border: 1px solid #c3e6cb;
+}
+
+.flash-error {
+    background-color: #f8d7da; /* Light red background */
+    color: #721c24; /* Dark red text */
+    border: 1px solid #f5c6cb;
+}
+
+.flash-warning {
+    background-color: #fff3cd; /* Light yellow background */
+    color: #856404; /* Dark yellow text */
+    border: 1px solid #ffeeba;
+}

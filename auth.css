@@ -1,0 +1,147 @@
+/* ===== General Reset ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ===== Body Layout ===== */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #fff4dc, #fcd5ce);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* Add a wrapper to center the login box */
+.page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 80px); /* subtract header height */
+  padding-top: 80px;
+}
+
+
+/* ===== Header/Navbar ===== */
+#header {
+  height: 80px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Fix navbar display */
+#navbar {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
+
+#navbar li a {
+  font-family: Arial, sans-serif;
+  text-decoration: none;
+  color: #5c4400;
+  font-weight: bold;
+  padding: 8px 10px;
+  transition: background 0.3s ease;
+}
+
+#navbar li a:hover {
+  background-color: #fcd5ce;
+  border-radius: 5px;
+}
+
+/* ===== Centered Login Box ===== */
+.login-box {
+  background: #fff;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  width: 350px;
+  text-align: center;
+  margin: 100px auto; /* ensures space below fixed header */
+}
+
+/* ===== Login Box Contents ===== */
+.login-box h2 {
+  margin-bottom: 20px;
+  color: #444;
+}
+
+.user-box {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.user-box input {
+  width: 100%;
+  padding: 10px 8px;
+  font-size: 16px;
+  color: #333;
+  border: none;
+  border-bottom: 2px solid #c1912c;
+  outline: none;
+  background: transparent;
+}
+
+.user-box label {
+  position: absolute;
+  top: 10px;
+  left: 8px;
+  color: #888;
+  transition: 0.3s;
+  pointer-events: none;
+}
+
+.user-box input:focus + label,
+.user-box input:valid + label {
+  top: -14px;
+  font-size: 12px;
+  color: #c1912c;
+}
+
+/* ===== Buttons and Links ===== */
+.login-btn {
+  background-color: #c1912c;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.login-btn:hover {
+  background-color: #a9781f;
+}
+
+.alt-link {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.alt-link a {
+  color: #c1912c;
+  text-decoration: none;
+}
+
+.alt-link a:hover {
+  text-decoration: underline;
+}
+
