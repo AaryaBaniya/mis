@@ -10,21 +10,20 @@ if (!isset($_SESSION['user_id'])) {
 include 'db.php'; 
 
 $user_id = $_SESSION['user_id'];
-$purchase_time_param = $_GET['purchase_time'] ?? null;
 $order_ref_param = $_GET['order_ref'] ?? null; 
 $order_summary = [];
 $total_order_amount = 0;
 $shipping_details = null; 
 $payment_details = null; 
 
-if ($purchase_time_param && $order_ref_param) { 
+if ($order_ref_param) { 
     $sql = "SELECT p.*, prod.name as product_name_from_db 
             FROM purchases p 
             JOIN products prod ON p.product_id = prod.id 
-            WHERE p.user_id = ? AND p.purchase_date = ? AND p.order_reference_id = ?
+            WHERE p.user_id = ? AND p.order_reference_id = ?
             ORDER BY p.id ASC"; 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("iss", $user_id, $purchase_time_param, $order_ref_param);
+    $stmt->bind_param("is", $user_id, $order_ref_param);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -39,7 +38,8 @@ if ($purchase_time_param && $order_ref_param) {
                 'method' => $row['payment_method'],
                 'status' => $row['status'],
                 'khalti_idx' => $row['khalti_idx'],
-                'order_reference_id' => $row['order_reference_id'] 
+                'order_reference_id' => $row['order_reference_id'],
+                'purchase_date' => $row['purchase_date']
             ];
         }
         $order_summary[] = [
@@ -51,9 +51,7 @@ if ($purchase_time_param && $order_ref_param) {
     }
     $stmt->close();
 } else {
-    // Fallback if parameters are missing
     $_SESSION['flash_message'] = "⚠️ Could not load specific order details.";
-    
 }
 ?>
 <!DOCTYPE html>
@@ -69,8 +67,6 @@ if ($purchase_time_param && $order_ref_param) {
 if (isset($_SESSION['flash_message'])) {
     $message = $_SESSION['flash_message'];
     $class = '';
-    
-    // Determine the class based on keywords/icons in the message
     if (strpos($message, '✅') !== false || strpos(strtolower($message), 'success') !== false || strpos(strtolower($message), 'placed') !== false) {
         $class = 'flash-success';
     } elseif (strpos($message, '❌') !== false || strpos(strtolower($message), 'failed') !== false || strpos(strtolower($message), 'error') !== false || strpos(strtolower($message), 'problem') !== false) {
@@ -78,11 +74,10 @@ if (isset($_SESSION['flash_message'])) {
     } elseif (strpos($message, '⚠️') !== false || strpos(strtolower($message), 'warning') !== false || strpos(strtolower($message), 'invalid') !== false || strpos(strtolower($message), 'empty') !== false) {
         $class = 'flash-warning';
     } else {
-        $class = 'flash-warning'; // Default to warning if no specific icon/keyword is found
+        $class = 'flash-warning';
     }
-    
     echo '<div class="flash-message ' . $class . '">' . htmlspecialchars($message) . '</div>';
-    unset($_SESSION['flash_message']); // Clear the message after displaying it
+    unset($_SESSION['flash_message']);
 }
 ?>
 
@@ -92,8 +87,8 @@ if (isset($_SESSION['flash_message'])) {
 
   <?php if (!empty($order_summary)): ?>
     <div class="order-summary-box">
-      <h2>Order Reference: <?= htmlspecialchars($payment_details['order_reference_id'] ?? 'N/A') ?></h2>
-      <p><strong>Order Placed on:</strong> <?= htmlspecialchars(date('M d, Y H:i A', strtotime($purchase_time_param))) ?></p>
+      <h2>Order Reference: <?= htmlspecialchars($payment_details['order_reference_id']) ?></h2>
+      <p><strong>Order Placed on:</strong> <?= htmlspecialchars(date('M d, Y H:i A', strtotime($payment_details['purchase_date']))) ?></p>
       <p><strong>Total Amount:</strong> Rs. <?= number_format($total_order_amount, 2) ?></p>
       
       <?php if ($payment_details): ?>
@@ -105,11 +100,9 @@ if (isset($_SESSION['flash_message'])) {
       <?php endif; ?>
 
       <h3>Shipping To:</h3>
-      <?php if ($shipping_details): ?>
-        <p><?= htmlspecialchars($shipping_details['name']) ?></p>
-        <p><?= htmlspecialchars($shipping_details['address']) ?></p>
-        <p><?= htmlspecialchars($shipping_details['phone']) ?></p>
-      <?php endif; ?>
+      <p><?= htmlspecialchars($shipping_details['name']) ?></p>
+      <p><?= htmlspecialchars($shipping_details['address']) ?></p>
+      <p><?= htmlspecialchars($shipping_details['phone']) ?></p>
 
       <h3>Items Purchased:</h3>
       <ul>
@@ -120,7 +113,6 @@ if (isset($_SESSION['flash_message'])) {
     </div>
   <?php else: ?>
     <p>We couldn't find the details for your specific order, but rest assured it was placed!</p>
-    <p>You can check your <a href="purchase_history.php">purchase history</a> for more details.</p>
   <?php endif; ?>
 
   <a href="shop.php" class="btn primary-btn">Continue Shopping</a>

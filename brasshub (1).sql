@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 29, 2025 at 05:17 AM
+-- Generation Time: Aug 29, 2025 at 09:10 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -41,8 +41,7 @@ CREATE TABLE `cart` (
 
 INSERT INTO `cart` (`id`, `user_id`, `product_id`, `quantity`, `added_on`) VALUES
 (32, 2, 12, 1, '2025-08-27 13:40:16'),
-(40, 1, 13, 1, '2025-08-28 10:43:36'),
-(43, 13, 10, 1, '2025-08-28 15:16:40');
+(66, 1, 9, 1, '2025-08-29 18:48:10');
 
 -- --------------------------------------------------------
 
@@ -64,6 +63,35 @@ INSERT INTO `categories` (`id`, `name`) VALUES
 (2, 'Decor'),
 (1, 'New Arrivals'),
 (3, 'Statue');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `order_id` int(11) NOT NULL,
+  `sid` int(11) NOT NULL,
+  `total_amount` decimal(10,2) NOT NULL,
+  `order_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `status` varchar(50) DEFAULT 'Pending',
+  `payment_ref_id` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_items`
+--
+
+CREATE TABLE `order_items` (
+  `item_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -117,7 +145,7 @@ CREATE TABLE `purchases` (
   `shipping_address` text NOT NULL,
   `phone` varchar(20) NOT NULL,
   `payment_method` varchar(20) NOT NULL,
-  `khalti_idx` varchar(50) DEFAULT NULL,
+  `khalti_idx` varchar(100) DEFAULT NULL,
   `order_reference_id` varchar(100) DEFAULT NULL,
   `cancelled_by` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -135,7 +163,7 @@ INSERT INTO `purchases` (`id`, `user_id`, `product_id`, `quantity`, `price`, `pu
 (6, 1, 12, 1, 26000.00, '2025-08-26 15:58:59', 'Pending', 'Aarya Baniya', 'Indrachowk', '9828884062', 'COD', NULL, NULL, NULL),
 (7, 1, 8, 1, 8000.00, '2025-08-26 15:58:59', 'Pending', 'Aarya Baniya', 'Indrachowk', '9828884062', 'COD', NULL, NULL, NULL),
 (8, 2, 13, 1, 19000.00, '2025-08-27 15:26:56', 'Dispatched', 'Aarya Baniya', 'Indrachowk', '9828884062', 'COD', NULL, NULL, NULL),
-(9, 2, 12, 2, 26000.00, '2025-08-27 15:26:56', 'Pending', 'Aarya Baniya', 'Indrachowk', '9828884062', 'COD', NULL, NULL, NULL),
+(9, 2, 12, 2, 26000.00, '2025-08-27 15:26:56', 'Cancelled', 'Aarya Baniya', 'Indrachowk', '9828884062', 'COD', NULL, NULL, 'admin'),
 (10, 2, 11, 1, 31000.00, '2025-08-27 15:26:56', 'Pending', 'Aarya Baniya', 'Indrachowk', '9828884062', 'COD', NULL, NULL, NULL),
 (11, 1, 13, 2, 19000.00, '2025-08-28 09:35:26', 'Pending', 'Aarya Baniya', 'Indrachowk', '9828884062', 'COD', NULL, NULL, NULL),
 (12, 1, 12, 1, 26000.00, '2025-08-28 09:35:26', 'Pending', 'Aarya Baniya', 'Indrachowk', '9828884062', 'COD', NULL, NULL, NULL),
@@ -145,7 +173,34 @@ INSERT INTO `purchases` (`id`, `user_id`, `product_id`, `quantity`, `price`, `pu
 (16, 1, 13, 2, 19000.00, '2025-08-28 12:39:50', 'Pending', 'Aarya Baniya', 'Indrachowk', '9828884062', 'COD', NULL, '1756377590-1', NULL),
 (17, 13, 4, 1, 4500.00, '2025-08-28 16:23:33', 'Dispatched', 'Aarya Baniya', 'Indrachowk', '9828884062', 'COD', NULL, '1756391013-13', NULL),
 (18, 13, 14, 3, 12000.00, '2025-08-28 16:23:33', 'Cancelled', 'Aarya Baniya', 'Indrachowk', '9828884062', 'COD', NULL, '1756391013-13', 'user'),
-(19, 13, 4, 1, 4500.00, '2025-08-28 17:06:33', 'Pending', 'Pradeep Baniya', 'Ktm', '9841326592', 'COD', NULL, '1756393593-13', NULL);
+(19, 13, 4, 1, 4500.00, '2025-08-28 17:06:33', 'Pending', 'Pradeep Baniya', 'Ktm', '9841326592', 'COD', NULL, '1756393593-13', NULL),
+(20, 1, 12, 1, 26000.00, '2025-08-29 06:48:18', 'Pending', 'Aarya Baniya', 'Indrachowk', '9828884062', 'COD', NULL, '1756442898-1', NULL),
+(21, 1, 13, 1, 19000.00, '2025-08-29 06:48:18', 'Pending', 'Aarya Baniya', 'Indrachowk', '9828884062', 'COD', NULL, '1756442898-1', NULL),
+(22, 1, 6, 1, 27000.00, '2025-08-29 11:28:39', 'Pending', 'Aarya Baniya', 'Indrachowk', '9828884062', 'COD', NULL, '1756459719-1', NULL),
+(23, 1, 13, 1, 19000.00, '2025-08-29 11:28:39', 'Cancelled', 'Aarya Baniya', 'Indrachowk', '9828884062', 'COD', NULL, '1756459719-1', 'user'),
+(24, 1, 13, 1, 19000.00, '2025-08-29 15:04:59', 'Pending', 'Aarya Baniya', 'Indrachowk', '9828884062', 'COD', NULL, '1756472699-1', NULL),
+(25, 1, 7, 1, 2800.00, '2025-08-29 16:51:44', 'Pending', 'Aarya Baniya', 'Indrachowk', '9828884062', 'COD', NULL, '1756479104-1', NULL),
+(26, 1, 13, 1, 19000.00, '2025-08-29 16:51:44', 'Pending', 'Aarya Baniya', 'Indrachowk', '9828884062', 'COD', NULL, '1756479104-1', NULL),
+(27, 1, 3, 1, 32000.00, '2025-08-29 18:29:17', 'Success', 'Aarya Baniya', 'Indrachowk', '982345676', 'Khalti', 'czBmot7xrarn7o7CzrmrgR', 'ORD_68b1d55dbcf92', NULL),
+(28, 13, 10, 1, 2500.00, '2025-08-29 18:50:37', 'Success', 'Aarya Baniya', 'Indrachowk', '982345676', 'Khalti', 'VEtqZktRdhjNjprCDGcbNd', 'ORD_68b1da5db320f', NULL),
+(29, 13, 12, 1, 26000.00, '2025-08-29 18:50:37', 'Success', 'Aarya Baniya', 'Indrachowk', '982345676', 'Khalti', 'VEtqZktRdhjNjprCDGcbNd', 'ORD_68b1da5db320f', NULL),
+(30, 13, 13, 1, 19000.00, '2025-08-29 18:50:37', 'Success', 'Aarya Baniya', 'Indrachowk', '982345676', 'Khalti', 'VEtqZktRdhjNjprCDGcbNd', 'ORD_68b1da5db320f', NULL),
+(31, 13, 7, 1, 2800.00, '2025-08-29 18:57:41', 'Pending', 'Aarya Baniya', 'Indrachowk', '982345676', 'COD', NULL, 'ORD_68b1dc058fa7d', NULL),
+(32, 13, 8, 1, 8000.00, '2025-08-29 18:58:33', 'Success', 'Aarya Baniya', 'Indrachowk', '982345676', 'Khalti', 'uN8Vn8wURTBS9xjyh27kbd', 'ORD_68b1dc39aa55e', NULL),
+(33, 13, 3, 1, 32000.00, '2025-08-29 19:09:14', 'Pending', 'Aarya Baniya', 'Indrachowk', '982345676', 'COD', NULL, 'ORD_68b1deba0b6c0', NULL),
+(34, 1, 12, 1, 26000.00, '2025-08-29 19:10:29', 'Pending', 'Aarya Baniya', 'Indrachowk', '982345676', 'COD', NULL, 'ORD_68b1df0514574', NULL),
+(35, 1, 11, 1, 31000.00, '2025-08-29 19:45:04', 'Pending', 'Aarya Baniya', 'Indrachowk', '982345676', 'COD', NULL, 'ORD_68b1e720280fb', NULL),
+(36, 1, 10, 1, 2500.00, '2025-08-29 19:45:51', 'Dispatched', 'Aarya Baniya', 'Indrachowk', '982345676', 'Khalti', NULL, 'ORD_68b1e74faa5bb', NULL),
+(37, 13, 14, 1, 12000.00, '2025-08-29 19:55:16', 'Pending', 'Aarya Baniya', 'Indrachowk', '982345676', 'Khalti', 'w9BxAXvKGDEtDfqwSB7sW4', 'ORD_68b1e9845c670', NULL),
+(38, 13, 1, 1, 5500.00, '2025-08-29 20:01:37', 'Pending', 'Aarya Baniya', 'Indrachowk', '982345676', 'Khalti', '6d2zM6dDQcRSgET4tbxwpj', 'ORD_68b1eb01c7464', NULL),
+(39, 13, 10, 1, 2500.00, '2025-08-29 20:09:10', 'Pending', 'Aarya Baniya', 'Indrachowk', '982345676', 'Khalti', 'eAtparD9dJvBSwU7NR2Zs6', 'ORD_68b1ecc6cb747', NULL),
+(40, 13, 14, 1, 12000.00, '2025-08-29 20:22:49', 'Pending', 'Aarya Baniya', 'Indrachowk', '982345676', 'Khalti', 'GxSsyeMGNDGxjAepGJRcon', 'ORD_68b1eff963868', NULL),
+(41, 13, 12, 1, 26000.00, '2025-08-29 20:30:34', 'Pending', 'Aarya Baniya', 'Indrachowk', '982345676', 'Khalti', 'yQfDE7tLwM6tveTq659Mh4', 'ORD_68b1f1ca49476', NULL),
+(42, 13, 7, 1, 2800.00, '2025-08-29 20:37:52', 'Pending', 'Aarya Baniya', 'Indrachowk', '982345676', 'Khalti', 'gYhDQzJVfMKBvozNREEqPF', 'ORD_68b1f380cfacf', NULL),
+(43, 13, 12, 1, 26000.00, '2025-08-29 20:37:52', 'Pending', 'Aarya Baniya', 'Indrachowk', '982345676', 'Khalti', 'gYhDQzJVfMKBvozNREEqPF', 'ORD_68b1f380cfacf', NULL),
+(44, 13, 9, 1, 22000.00, '2025-08-29 20:49:53', 'Pending', 'Aarya Baniya', 'Indrachowk', '982345676', 'Khalti', 'eSQhnL9TEpfroGQgX8EhUn', 'ORD_68b1f65171a88', NULL),
+(45, 13, 1, 1, 5500.00, '2025-08-29 21:00:20', 'Pending', 'aa', 'aa', '8765432123', 'COD', NULL, 'ORD_68b1f8c4bdaca', NULL),
+(46, 13, 12, 1, 26000.00, '2025-08-29 21:02:57', 'Pending', 'aa', 'aaaaa', '9876543211', 'COD', NULL, 'ORD_68b1f96155f4b', NULL);
 
 -- --------------------------------------------------------
 
@@ -176,7 +231,8 @@ INSERT INTO `users` (`id`, `username`, `email`, `password`, `created_at`, `role`
 (10, 'Tenzin Palki', 'aaryabaniya11@gmail.com', '$2y$10$dRvAuljnTNRDUrydMlOT3uWriXulqMQX0ga3ufIV3x0tIkcKvdeu6', '2025-07-02 16:42:09', 'user'),
 (11, 'Salina Lama', 'aaryabaniya22@gmail.com', '$2y$10$4ixDgzbLHfhlvbISdIPq9u/65FkCFwQ2yu8h3wZ/aAnx6/Arh.uRe', '2025-07-02 16:43:33', 'user'),
 (12, 'test', 'test@gmail.com', '$2y$10$IwMQV4rMF4u5YvzHsyxk1eIZFF2SeJKTmdOVZ9VDqrpmXe5LMFLFS', '2025-07-04 06:03:27', 'user'),
-(13, 'Arshi Baniya', 'arshibaniya12@gmail.com', '$2y$10$Yg4DSASSTSRBiQuWZrU03ewFSXpicCsgZNc98/36kfAlxnn7WFwrm', '2025-08-28 09:18:46', 'user');
+(13, 'Arshi Baniya', 'arshibaniya12@gmail.com', '$2y$10$Yg4DSASSTSRBiQuWZrU03ewFSXpicCsgZNc98/36kfAlxnn7WFwrm', '2025-08-28 09:18:46', 'user'),
+(14, 'aaaa', 'aa@aa', '$2y$10$tNQYFkvXKUI/dtVk4vrM6O935O8ykiPYIDtkQBIkZBW8sdXm5X3ia', '2025-08-29 19:04:01', 'user');
 
 --
 -- Indexes for dumped tables
@@ -196,6 +252,20 @@ ALTER TABLE `cart`
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`order_id`);
+
+--
+-- Indexes for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD PRIMARY KEY (`item_id`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Indexes for table `products`
@@ -227,13 +297,25 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `order_items`
+--
+ALTER TABLE `order_items`
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -245,13 +327,13 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `purchases`
 --
 ALTER TABLE `purchases`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Constraints for dumped tables
@@ -263,6 +345,13 @@ ALTER TABLE `users`
 ALTER TABLE `cart`
   ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
 
 --
 -- Constraints for table `products`

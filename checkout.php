@@ -49,6 +49,10 @@ $_SESSION['checkout_total_amount'] = $total_amount;
         .flash-success { background: #d4edda; color: #155724; }
         .flash-error { background: #f8d7da; color: #721c24; }
         .flash-warning { background: #fff3cd; color: #856404; }
+        /* Added for error styling */
+        .error-message { color: red; font-size: 0.9em; margin-top: -5px; margin-bottom: 10px; display: none; }
+        input:invalid:not(:placeholder-shown) { border-color: red; } /* Highlight invalid fields */
+        input:valid:not(:placeholder-shown) { border-color: green; } /* Highlight valid fields */
     </style>
 </head>
 <body>
@@ -71,11 +75,16 @@ if (isset($_SESSION['flash_message'])) {
     <?php if (empty($cart_items)): ?>
         <p>Your cart is empty.</p>
     <?php else: ?>
-        <form id="checkoutForm" class="checkout-form" method="POST" action="process_order.php">
+        <form id="checkoutForm" class="checkout-form" method="POST" action="process_order.php" novalidate> <!-- Added novalidate to handle all validation in JS -->
             <h3>Shipping Information</h3>
-            <input type="text" name="shipping_name" placeholder="Full Name" value="<?= htmlspecialchars($_SESSION['user_name'] ?? '') ?>" required>
-            <input type="text" name="shipping_address" placeholder="Full Address" required>
-            <input type="text" name="shipping_phone" placeholder="Phone Number" required>
+            <input type="text" name="shipping_name" id="shipping_name" placeholder="Full Name (e.g., Ram Bahadur)" value="<?= htmlspecialchars($_SESSION['user_name'] ?? '') ?>" required minlength="2" pattern="^[\p{L}\s',.-]+$" title="Name should contain letters, spaces, hyphens, periods, or apostrophes." autofocus>
+            <p id="nameErrorMessage" class="error-message">Please enter a valid full name (letters, spaces, periods, hyphens, apostrophes only).</p>
+
+            <input type="text" name="shipping_address" id="shipping_address" placeholder="Full Address (e.g., Kathmandu-10, Buddhanagar)" required minlength="5" pattern="^[\p{L}\p{N}\s',./\\#-]+$" title="Address should contain letters, numbers, spaces, and common punctuation.">
+            <p id="addressErrorMessage" class="error-message">Please enter a valid address (min 5 characters, allows letters, numbers, spaces, and common punctuation).</p>
+
+            <input type="text" name="shipping_phone" id="shipping_phone" placeholder="Phone Number (e.g., 98XXXXXXXX)" required pattern="^(9[678]\d{8}|[0-9]{9,10})$" title="Enter a valid Nepali phone number (e.g., 98XXXXXXXX)">
+            <p id="phoneErrorMessage" class="error-message">Please enter a valid 10-digit Nepali mobile number (starting with 98, 97, or 96) or a 9-10 digit landline/other number.</p>
 
             <h3>Payment Method</h3>
             <label><input type="radio" name="payment_method" value="COD" checked> Cash on Delivery</label>
@@ -95,33 +104,89 @@ if (isset($_SESSION['flash_message'])) {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
-    const khaltiHint = document.getElementById('khalti_hint');
+    const checkoutForm = document.getElementById('checkoutForm');
+    const nameInput = document.getElementById('shipping_name');
+    const addressInput = document.getElementById('shipping_address');
+    const phoneInput = document.getElementById('shipping_phone');
 
-    function toggleKhaltiHint() {
-        if (document.querySelector('input[name="payment_method"][value="Khalti"]:checked')) {
-            khaltiHint.style.display = 'block';
-        } else {
-            khaltiHint.style.display = 'none';
+    const nameErrorMessage = document.getElementById('nameErrorMessage');
+    const addressErrorMessage = document.getElementById('addressErrorMessage');
+    const phoneErrorMessage = document.getElementById('phoneErrorMessage');
+
+    const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
+    // const khaltiHint = document.getElementById('khalti_hint'); // Uncomment if you have this element
+
+    // Regex patterns (should match HTML pattern attributes)
+    const nameRegex = /^[\p{L}\s',.-]+$/u; // \p{L} for any unicode letter, 'u' flag for unicode
+    const addressRegex = /^[\p{L}\p{N}\s',./\\#-]+$/u; // \p{N} for any unicode number
+    const nepaliPhoneRegex = /^(9[678]\d{8}|[0-9]{9,10})$/;
+
+
+    // Function to validate an input field
+    function validateInput(inputElement, errorMessageElement, regex, customMsg) {
+        const value = inputElement.value.trim();
+        let isValid = true;
+        let msg = customMsg;
+
+        if (inputElement.required && value === '') {
+            isValid = false;
+            msg = customMsg || "This field is required."; // Use default if custom not provided
+        } else if (regex && !regex.test(value)) {
+            isValid = false;
+            msg = customMsg || "Please enter a valid format.";
+        } else if (inputElement.minLength && value.length < inputElement.minLength) {
+            isValid = false;
+            msg = `Please enter at least ${inputElement.minLength} characters.`;
         }
+
+        if (isValid) {
+            errorMessageElement.style.display = 'none';
+            inputElement.setCustomValidity("");
+        } else {
+            errorMessageElement.textContent = msg;
+            errorMessageElement.style.display = 'block';
+            inputElement.setCustomValidity(msg); // Set custom validity for HTML5 validation pop-ups
+        }
+        return isValid;
     }
 
+    // Attach input event listeners for dynamic validation
+    nameInput.addEventListener('input', () => {
+        validateInput(nameInput, nameErrorMessage, nameRegex, "Please enter a valid full name (letters, spaces, periods, hyphens, apostrophes only, min 2 chars).");
+    });
+    addressInput.addEventListener('input', () => {
+        validateInput(addressInput, addressErrorMessage, addressRegex, "Please enter a valid address (min 5 characters, allows letters, numbers, spaces, and common punctuation).");
+    });
+    phoneInput.addEventListener('input', () => {
+        validateInput(phoneInput, phoneErrorMessage, nepaliPhoneRegex, "Please enter a valid 10-digit Nepali mobile (98XXXXXXXX, 97XXXXXXXX, 96XXXXXXXX) or a 9-10 digit landline/other number.");
+    });
+
+    // Toggle Khalti Hint (if applicable)
+    function toggleKhaltiHint() {
+        if (document.querySelector('input[name="payment_method"][value="Khalti"]:checked')) {
+            // khaltiHint.style.display = 'block';
+        } else {
+            // khaltiHint.style.display = 'none';
+        }
+    }
     paymentRadios.forEach(radio => {
         radio.addEventListener('change', toggleKhaltiHint);
     });
-    toggleKhaltiHint(); // set on load
-});
+    toggleKhaltiHint(); // Set on load
 
-// Basic shipping validation
-document.getElementById('checkoutForm').addEventListener('submit', function(e) {
-    const name = document.querySelector('input[name="shipping_name"]').value;
-    const address = document.querySelector('input[name="shipping_address"]').value;
-    const phone = document.querySelector('input[name="shipping_phone"]').value;
+    // --- Form Submission Validation ---
+    checkoutForm.addEventListener('submit', function(e) {
+        // Run all validations on submit
+        const isNameValid = validateInput(nameInput, nameErrorMessage, nameRegex, "Please enter a valid full name (letters, spaces, periods, hyphens, apostrophes only, min 2 chars).");
+        const isAddressValid = validateInput(addressInput, addressErrorMessage, addressRegex, "Please enter a valid address (min 5 characters, allows letters, numbers, spaces, and common punctuation).");
+        const isPhoneValid = validateInput(phoneInput, phoneErrorMessage, nepaliPhoneRegex, "Please enter a valid 10-digit Nepali mobile (98XXXXXXXX, 97XXXXXXXX, 96XXXXXXXX) or a 9-10 digit landline/other number.");
 
-    if (!name || !address || !phone) {
-        alert("Please fill in all shipping details.");
-        e.preventDefault();
-    }
+        if (!isNameValid || !isAddressValid || !isPhoneValid) {
+            e.preventDefault(); // Stop form submission if any field is invalid
+            alert("Please correct the errors in the form."); // General alert
+        }
+        // If all are valid, the form will submit normally
+    });
 });
 </script>
 </body>

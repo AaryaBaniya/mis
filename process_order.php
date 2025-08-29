@@ -8,12 +8,16 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$user_id = $_SESSION['user_id'] ?? 1;
+if (!isset($_SESSION['user_id'])) {
+    header("Location: signin.php");
+    exit();
+}
 
+$user_id = $_SESSION['user_id'];
 $shipping_name    = $_POST['shipping_name'];
 $shipping_address = $_POST['shipping_address'];
 $shipping_phone   = $_POST['shipping_phone'];
-$payment_method   = $_POST['payment_method'] ?? 'COD'; // default COD
+$payment_method   = $_POST['payment_method'] ?? 'COD';
 
 // Fetch cart items
 $sql = "SELECT c.product_id, c.quantity, p.price, p.name
@@ -40,7 +44,7 @@ if (empty($cart_items)) {
 }
 
 if ($payment_method === "COD") {
-    // ✅ Save order directly in DB
+    // ✅ Save COD orders directly in DB
     $purchase_time = date('Y-m-d H:i:s');
     $order_ref = uniqid("ORD_");
 
@@ -72,7 +76,6 @@ if ($payment_method === "COD") {
     $stmt->execute();
     $stmt->close();
 
-    // 🎉 Redirect to Thank You page
     header("Location: thankyou.php?purchase_time=" . urlencode($purchase_time) . "&order_ref=" . urlencode($order_ref));
     exit;
 

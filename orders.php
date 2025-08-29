@@ -14,13 +14,15 @@ $pending_orders = $conn->query("SELECT COUNT(*) as total FROM purchases WHERE st
 $dispatched_orders = $conn->query("SELECT COUNT(*) as total FROM purchases WHERE status = 'Dispatched'")->fetch_assoc()['total'];
 $cancelled_orders = $conn->query("SELECT COUNT(*) as total FROM purchases WHERE status = 'Cancelled'")->fetch_assoc()['total'];
 
-// --- MODIFIED SQL QUERY ---
-// Added the new shipping columns to the SELECT statement
-$sql = "SELECT p.*, pr.name AS product_name, u.username AS user_name, u.email AS user_email,
-        p.shipping_name, p.shipping_address, p.phone
-        FROM purchases p 
-        JOIN products pr ON p.product_id = pr.id 
-        JOIN users u ON p.user_id = u.id 
+// Orders list
+$sql = "SELECT p.*,
+               COALESCE(pr.name, 'N/A (Deleted Product)') AS product_name,  -- Handle missing product gracefully
+               COALESCE(u.username, 'Guest User') AS user_name,            -- Handle missing user gracefully
+               COALESCE(u.email, 'N/A') AS user_email,                     -- Handle missing user email gracefully
+               p.shipping_name, p.shipping_address, p.phone
+        FROM purchases p
+        LEFT JOIN products pr ON p.product_id = pr.id  -- <--- CHANGED TO LEFT JOIN
+        LEFT JOIN users u ON p.user_id = u.id          -- <--- CHANGED TO LEFT JOIN
         ORDER BY p.purchase_date DESC";
 $result = $conn->query($sql);
 ?>
@@ -72,15 +74,15 @@ $result = $conn->query($sql);
                   <small>Location: <?= htmlspecialchars($row['shipping_address']) ?></small><br>
                   <small>Tel: <?= htmlspecialchars($row['phone']) ?></small>
                 </td>
-                
+
                 <td><?= htmlspecialchars($row['product_name']) ?></td>
                 <td><?= (int)$row['quantity'] ?></td>
                 <td><?= htmlspecialchars($row['payment_method']) ?></td>
                 <td>
                   <span class="status-badge status-<?= strtolower(htmlspecialchars($row['status'])) ?>">
-                    <?php 
+                    <?php
                       if ($row['status'] === 'Cancelled') {
-                        echo 'Cancelled by ' . htmlspecialchars($row['cancelled_by']);
+                        echo 'Cancelled by ' . htmlspecialchars($row['cancelled_by'] ?? 'N/A'); // Add null coalescing for cancelled_by
                       } else {
                         echo htmlspecialchars($row['status']);
                       }
@@ -90,8 +92,13 @@ $result = $conn->query($sql);
                 <td class="action-buttons">
                   <?php if ($row['status'] === 'Pending'): ?>
                     <div class="button-group">
+                      <!-- Dispatch button always available -->
                       <a href="update_order_status.php?id=<?= $row['id'] ?>&status=Dispatched" class="button approve-btn">Dispatch</a>
-                      <a href="update_order_status.php?id=<?= $row['id'] ?>&status=Cancelled" class="button danger-btn" onclick="return confirm('Are you sure you want to decline this order?')">Decline</a>
+
+                      <!-- Decline only for COD -->
+                      <?php if ($row['payment_method'] === 'COD'): ?>
+                        <a href="update_order_status.php?id=<?= $row['id'] ?>&status=Cancelled" class="button danger-btn" onclick="return confirm('Are you sure you want to decline this order?')">Decline</a>
+                      <?php endif; ?>
                     </div>
                   <?php else: ?>
                     <span class="muted">No Action</span>
